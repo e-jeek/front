@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /home/ubuntu
-sudo echo "deployed" >> result.txt
+docker run -it --rm -p 3000:3000 docker-test
