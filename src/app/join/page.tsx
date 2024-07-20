@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import google from "../../assets/images/google.svg";
 import naver from "../../assets/images/naver.svg";
@@ -8,6 +8,35 @@ import kakao from "../../assets/images/kakao.svg";
 export default function Page() {
     const [usernameFocused, setUsernameFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
+    const [closing, setClosing] = useState(false);
+    const signUpRef = useRef<HTMLDivElement>(null);
+
+    const handleSignUpClick = () => {
+        setShowSignUp(true);
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (signUpRef.current && !signUpRef.current.contains(event.target as Node)) {
+            setClosing(true);
+            setTimeout(() => {
+                setShowSignUp(false);
+                setClosing(false);
+            }, 500);
+        }
+    };
+
+    useEffect(() => {
+        if (showSignUp) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showSignUp]);
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-white">
             <div className="w-80 p-6">
@@ -51,8 +80,24 @@ export default function Page() {
 
                 <div className="flex justify-between mb-7 pl-5 pr-8">
                     <a href="#" className="text-sm">아이디/비밀번호 찾기</a>
-                    <a href="#" className="text-sm">회원가입</a>
+                    <button onClick={handleSignUpClick} className="text-sm">회원가입</button>
                 </div>
+
+                {showSignUp && (
+                    <div ref={signUpRef} className={`fixed inset-x-0 bottom-0 flex justify-center p-4 bg-gray-300 border-t 
+                                                    border-gray-300 rounded-t-lg transform 
+                                                    transition-transform duration-500 
+                                                    ${closing ? 'animate-slide-down' : 'animate-slide-up'}
+                    `}>
+                        <div className="w-80 bg-gray-300 p-4">
+                            <h2 className="text-center mb-4">간편 회원가입</h2>
+                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">카카오로 회원가입</button>
+                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">구글로 회원가입</button>
+                            <button className="w-full mb-8 p-2 bg-blue-400 rounded">네이버로 회원가입</button>
+                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">이메일로 회원가입</button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex justify-around mt-9">
                     <button
