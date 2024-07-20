@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+	<title>naver</title>
+	<defs>
+		<image  width="32" height="32" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAAXNSR0IB2cksfwAAAANQTFRFAAAAp3o92gAAAAF0Uk5TAEDm2GYAAAAMSURBVHicY2AY3AAAAKAAAbAGYhgAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		.s0 { fill: #ffffff } 
+	</style>
+	<path id="&lt;Path&gt;" class="s0" d="m21.3 17.1l-11.4-16.2h-9.4v30.4h9.9v-16.3l11.3 16.3h9.5v-30.4h-9.9z"/>
+	<use id="Background" href="#img1" x="0" y="0"/>
+</svg>

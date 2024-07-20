@@ -1,5 +1,9 @@
 "use client"
 import { useState } from "react";
+import Image from "next/image";
+import google from "../../assets/images/google.svg";
+import naver from "../../assets/images/naver.svg";
+import kakao from "../../assets/images/kakao.svg";
 
 export default function Page() {
     const [usernameFocused, setUsernameFocused] = useState(false);
@@ -41,25 +45,28 @@ export default function Page() {
                     />
                 </div>
 
-                <button type="submit" className="w-full mb-4 p-2 bg-gray-300 rounded">
+                <button type="submit" className="w-full mb-4 p-2 bg-blue-400 rounded">
                     로 그 인
                 </button>
 
-                <div className="flex justify-between mb-4">
-                    <a href="#" className="text-sm">비밀번호 찾기</a>
+                <div className="flex justify-between mb-7 pl-5 pr-8">
+                    <a href="#" className="text-sm">아이디/비밀번호 찾기</a>
                     <a href="#" className="text-sm">회원가입</a>
                 </div>
 
-                <div className="flex justify-around">
-                    <div className="w-12 h-12 flex justify-center items-center bg-gray-300 rounded-full">
-                        구글
-                    </div>
-                    <div className="w-12 h-12 flex justify-center items-center bg-gray-300 rounded-full">
-                        카카오
-                    </div>
-                    <div className="w-12 h-12 flex justify-center items-center bg-gray-300 rounded-full">
-                        네이버
-                    </div>
+                <div className="flex justify-around mt-9">
+                    <button
+                        className="bg-white w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
+                        <Image src={google} alt="Google" width={30} height={30}/>
+                    </button>
+                    <button
+                        className="bg-yellow-400 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
+                        <Image src={kakao} alt="Google" width={25} height={25}/>
+                    </button>
+                    <button
+                        className="bg-green-600 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
+                        <Image src={naver} alt="Google" width={25} height={25}/>
+                    </button>
                 </div>
             </div>
         </div>

@@ -12,11 +12,17 @@ export default async function checkToken() {
             setCookie("workoutwith_access_token", data.token, {
                 expires: new Date(data.expiredAt),
             });
+
+            return {
+                code: 1,
+                message: data.token
+            };
         }
-        return {
+
+        return  {
             code: 1,
-            message: "Success",
-        };
+            message: accessToken
+        }
     } catch (err) {
         if (err instanceof AxiosError) {
             return err?.response?.data;

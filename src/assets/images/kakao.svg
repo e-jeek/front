@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+	<title>kakao</title>
+	<defs>
+		<image  width="32" height="32" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAAXNSR0IB2cksfwAAAANQTFRFAAAAp3o92gAAAAF0Uk5TAEDm2GYAAAAMSURBVHicY2AY3AAAAKAAAbAGYhgAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		.s0 { fill-opacity: .9;fill: #000000 } 
+	</style>
+	<path id="Shape 2" class="s0" d="m16 1c-8.8 0-16 5.5-16 12.3 0 4.3 2.8 8 7 10.3l-1.8 6.5c-0.1 0.5 0.5 1 1 0.7l7.8-5.2q1 0.1 2 0.1c8.8 0 16-5.5 16-12.4 0-6.8-7.2-12.3-16-12.3"/>
+	<use id="Background" href="#img1" x="0" y="0"/>
+</svg>
