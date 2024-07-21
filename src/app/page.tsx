@@ -10,10 +10,10 @@ export default function Home() {
   useEffect(() => {
     const accessToken = checkToken()
         .then((data) => {
-          router.push("/join");
+          router.push("/login");
         })
         .catch((err) => {
-          router.push("/join");
+          router.push("/login");
         });
 
   }, []);

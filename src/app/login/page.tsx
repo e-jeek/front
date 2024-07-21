@@ -4,8 +4,10 @@ import Image from "next/image";
 import google from "../../assets/images/google.svg";
 import naver from "../../assets/images/naver.svg";
 import kakao from "../../assets/images/kakao.svg";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
+    const router = useRouter();
     const [usernameFocused, setUsernameFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
@@ -23,6 +25,14 @@ export default function Page() {
                 setShowSignUp(false);
                 setClosing(false);
             }, 500);
+        }
+    };
+
+    const handleSignUpPage = (method: string): void => {
+        if (method === "email") {
+            router.push("/signup");
+        } else {
+            console.log("social login");
         }
     };
 
@@ -45,13 +55,13 @@ export default function Page() {
                         htmlFor="username"
                         className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-base"}
                     >
-                        아이디
+                        이메일
                     </label>
                     <input
                         type="text"
                         id="username"
                         name="username"
-                        className="w-full border-b-2 border-gray-300 focus:border-black outline-none py-2 pl-16"
+                        className="w-full border-b-2 focus:border-black outline-none py-2 pl-16"
                         onFocus={() => setUsernameFocused(true)}
                         onBlur={() => setUsernameFocused(false)}
                     />
@@ -94,7 +104,12 @@ export default function Page() {
                             <button className="w-full mb-4 p-2 bg-blue-400 rounded">카카오로 회원가입</button>
                             <button className="w-full mb-4 p-2 bg-blue-400 rounded">구글로 회원가입</button>
                             <button className="w-full mb-8 p-2 bg-blue-400 rounded">네이버로 회원가입</button>
-                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">이메일로 회원가입</button>
+                            <button
+                                className="w-full mb-4 p-2 bg-blue-400 rounded"
+                                onClick={() => handleSignUpPage("email")}
+                            >
+                                이메일로 회원가입
+                            </button>
                         </div>
                     </div>
                 )}
