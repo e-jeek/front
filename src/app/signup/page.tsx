@@ -163,7 +163,7 @@ export default function Page() {
                         </div>
                         {!isValidPassword(password) && <p className="text-xs mb-0.5 text-red-600">대소문자, 숫자를 포함한 8자리 이상이어야합니다.</p>}
 
-                        <div className={`relative mb-5 ${password == passwordConfirm ? "mb-5" : "mb-0.5"}`}>
+                        <div className={`relative mb-5 ${passwordConfirm && password == passwordConfirm ? "mb-5" : "mb-0.5"}`}>
                             <label
                                 htmlFor="passworkConfirm"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-xs"}
@@ -180,7 +180,7 @@ export default function Page() {
                                 required
                             />
                         </div>
-                        {password != passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
+                        {passwordConfirm && password != passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
 
                         <div className="relative mb-5">
                             <label
