@@ -26,9 +26,32 @@ export default function Page() {
     const [weight, setWeight] = useState("");
     const [gender, setGender] = useState("MALE");
 
+    const isValidEmail = (email: string): boolean => {
+        if (!email) {
+            return true;
+        }
+        // 이메일 정규 표현식
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const isValidPassword = (password: string): boolean => {
+        if (!password) {
+            return true;
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // 폼 제출 처리
+
+        // if (!isValidEmail(email) && password != passwordConfirm) {
+        //     alert("다음 단계로 넘어갈 수 없습니다.");
+        //     return;
+        // }
+
         console.log({
             email,
             password,
@@ -97,7 +120,7 @@ export default function Page() {
                     <h2 className="text-lg font-medium mb-4">필수 정보 입력</h2>
 
                     <form onSubmit={handleSubmit}>
-                        <div className="relative mb-5">
+                        <div className={`relative ${isValidEmail(email) ? "mb-5" : "mb-0.5"}`}>
                             <label
                                 htmlFor="username"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
@@ -119,8 +142,9 @@ export default function Page() {
                                 중복 확인
                             </button>
                         </div>
+                        {!isValidEmail(email) && <p className="text-xs mb-0.5 text-red-600">이메일 형식이 아닙니다.</p>}
 
-                        <div className="relative mb-5">
+                        <div className={`relative ${isValidPassword(password) ? "mb-5" : "mb-0.5"}`}>
                             <label
                                 htmlFor="password"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
@@ -137,8 +161,9 @@ export default function Page() {
                                 required
                             />
                         </div>
+                        {!isValidPassword(password) && <p className="text-xs mb-0.5 text-red-600">대소문자, 숫자를 포함한 8자리 이상이어야합니다.</p>}
 
-                        <div className="relative mb-5">
+                        <div className={`relative mb-5 ${password == passwordConfirm ? "mb-5" : "mb-0.5"}`}>
                             <label
                                 htmlFor="passworkConfirm"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-xs"}
@@ -155,6 +180,7 @@ export default function Page() {
                                 required
                             />
                         </div>
+                        {password != passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
 
                         <div className="relative mb-5">
                             <label
