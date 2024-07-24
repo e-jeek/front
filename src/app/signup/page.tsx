@@ -6,16 +6,22 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import {format} from "date-fns";
 import google from "../../assets/images/google.svg";
+import {confirmEmail, confirmNickname, sendCheckMail, signUp} from "@/api/signUp";
+import Timer from "@/components/Timer";
 
 export default function Page() {
     const router = useRouter();
 
     // required
     const [email, setEmail] = useState('');
+    const [emailConfirmed, setEmailConfirmed] = useState(false);
+    const [emailChecked, setEmailChecked] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
+    const [nicknameConfirmed, setNicknameConfirmed] = useState(false);
     const [agreement, setAgreement] = useState(false);
     const [marketing, setMarketing] = useState(false);
     const [performedFirst, setPerformedFirst] = useState(false);
@@ -47,38 +53,20 @@ export default function Page() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // if (!isValidEmail(email) && password != passwordConfirm) {
-        //     alert("다음 단계로 넘어갈 수 없습니다.");
-        //     return;
-        // }
+        if (!emailConfirmed || !emailChecked || !isValidPassword(password)
+            || password != passwordConfirm || !nicknameConfirmed || !name || !marketing) {
+            alert("다음 단계로 넘어갈 수 없습니다.");
+            return;
+        }
 
-        console.log({
-            email,
-            password,
-            passwordConfirm,
-            name,
-            nickname,
-            agreement,
-            marketing,
-        });
+        console.log("next");
 
         setPerformedFirst(true);
     };
 
     const handleSignUp = () => {
-        console.log({
-            email,
-            password,
-            passwordConfirm,
-            name,
-            nickname,
-            agreement,
-            marketing,
-            birth,
-            height,
-            weight,
-            gender
-        });
+        console.log("handleSignUp");
+        // const res = signUp();
     }
 
     // 커스텀 입력 컴포넌트
@@ -92,6 +80,7 @@ export default function Page() {
         </div>
     ));
     CustomInput.displayName = 'CustomInput';
+
 
     if (!performedFirst) {
         return (
@@ -119,13 +108,63 @@ export default function Page() {
 
                     <h2 className="text-lg font-medium mb-4">필수 정보 입력</h2>
 
-                    <form onSubmit={handleSubmit}>
-                        <div className={`relative ${isValidEmail(email) ? "mb-5" : "mb-0.5"}`}>
+
+                    <div className={`relative ${isValidEmail(email) ? "mb-5" : "mb-0.5"}`}>
+                        <label
+                            htmlFor="username"
+                            className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
+                        >
+                            이메일
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+
+                        {!emailConfirmed &&
+                        <button
+                            className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
+                            onClick={() => confirmEmail(email)
+                                .then((d) => {setEmailConfirmed(true)})
+                                .catch((e) => {
+                                    alert("error");
+                                    setEmailConfirmed(true);
+                                })}
+                        >
+                            중복 확인
+                        </button>
+                        }
+                        {emailConfirmed &&
+                            <button
+                                className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
+                                onClick={() => sendCheckMail(email)
+                                    .then((d) => {
+                                        setEmailSent(true);
+
+                                    })
+                                    .catch((e) => {
+                                        alert("error");
+                                        setEmailSent(true);
+                                    })}
+                            >
+                                인증번호 발송
+                            </button>
+                        }
+                    </div>
+                    {!isValidEmail(email) && <p className="text-xs mb-0.5 text-red-600">이메일 형식이 아닙니다.</p>}
+
+                    {emailConfirmed &&
+                        <div className={"relative mb-5"}>
                             <label
                                 htmlFor="username"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
                             >
-                                이메일
+                                인증번호
                             </label>
                             <input
                                 type="text"
@@ -136,124 +175,144 @@ export default function Page() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
+                            { emailSent &&
+                            <span
+                                className={"absolute right-10 mt-3 text-xs"}
+                            >
+                                <Timer />
+                            </span>
+                            }
                             <button
                                 className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
+                                onClick={() => confirmEmail(email)
+                                    .then((d) => {
+                                        setEmailConfirmed(true)
+                                    })
+                                    .catch((e) => alert("error"))}
                             >
-                                중복 확인
+                                확인
                             </button>
                         </div>
-                        {!isValidEmail(email) && <p className="text-xs mb-0.5 text-red-600">이메일 형식이 아닙니다.</p>}
+                    }
 
-                        <div className={`relative ${isValidPassword(password) ? "mb-5" : "mb-0.5"}`}>
-                            <label
-                                htmlFor="password"
-                                className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
-                            >
-                                비밀번호
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        {!isValidPassword(password) && <p className="text-xs mb-0.5 text-red-600">대소문자, 숫자를 포함한 8자리 이상이어야합니다.</p>}
-
-                        <div className={`relative mb-5 ${passwordConfirm && password == passwordConfirm ? "mb-5" : "mb-0.5"}`}>
-                            <label
-                                htmlFor="passworkConfirm"
-                                className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-xs"}
-                            >
-                                비밀번호 확인
-                            </label>
-                            <input
-                                type="password"
-                                id="passworkConfirm"
-                                name="passwordConfirm"
-                                className="w-full border-b-2 focus:border-black outline-none py-2 p-20"
-                                value={passwordConfirm}
-                                onChange={(e) => setPasswordConfirm(e.target.value)}
-                                required
-                            />
-                        </div>
-                        {passwordConfirm && password != passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
-
-                        <div className="relative mb-5">
-                            <label
-                                htmlFor="name"
-                                className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
-                            >
-                                이름
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="relative mb-5">
-                            <label
-                                htmlFor="nickname"
-                                className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
-                            >
-                                닉네임
-                            </label>
-                            <input
-                                type="text"
-                                id="nickname"
-                                name="nickname"
-                                className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
-                                value={nickname}
-                                onChange={(e) => setNickname(e.target.value)}
-                                required
-                            />
-                            <button
-                                className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
-                            >
-                                중복 확인
-                            </button>
-                        </div>
-
-
-                        <div className="mb-4">
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox"
-                                    checked={agreement}
-                                    onChange={(e) => setAgreement(e.target.checked)}
-                                    required
-                                />
-                                <span className="ml-2">약관 동의</span>
-                            </label>
-                        </div>
-                        <div className="mb-6">
-                            <label className="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox"
-                                    checked={marketing}
-                                    onChange={(e) => setMarketing(e.target.checked)}
-                                />
-                                <span className="ml-2">마케팅 정보 동의 (선택)</span>
-                            </label>
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    <div className={`relative ${isValidPassword(password) ? "mb-5" : "mb-0.5"}`}>
+                        <label
+                            htmlFor="password"
+                            className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
                         >
-                            다음
+                            비밀번호
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {!isValidPassword(password) &&
+                        <p className="text-xs mb-0.5 text-red-600">대소문자, 숫자를 포함한 8자리 이상이어야합니다.</p>}
+
+                    <div
+                        className={`relative mb-5 ${passwordConfirm && password == passwordConfirm ? "mb-5" : "mb-0.5"}`}>
+                        <label
+                            htmlFor="passworkConfirm"
+                            className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-xs"}
+                        >
+                            비밀번호 확인
+                        </label>
+                        <input
+                            type="password"
+                            id="passworkConfirm"
+                            name="passwordConfirm"
+                            className="w-full border-b-2 focus:border-black outline-none py-2 p-20"
+                            value={passwordConfirm}
+                            onChange={(e) => setPasswordConfirm(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {passwordConfirm && password != passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
+
+                    <div className="relative mb-5">
+                        <label
+                            htmlFor="name"
+                            className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
+                        >
+                            이름
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="relative mb-5">
+                        <label
+                            htmlFor="nickname"
+                            className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
+                        >
+                            닉네임
+                        </label>
+                        <input
+                            type="text"
+                            id="nickname"
+                            name="nickname"
+                            className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            required
+                        />
+                        <button
+                            onClick={() => confirmNickname(email).then((d) => {
+                                setNicknameConfirmed(true);
+                            }).catch((e) => {
+                                alert("error");
+
+                            })}
+                            className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded "}
+
+                        >
+                            중복 확인
                         </button>
-                    </form>
+                    </div>
+
+
+                    <div className="mb-4">
+                        <label className="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                className="form-checkbox"
+                                checked={agreement}
+                                onChange={(e) => setAgreement(e.target.checked)}
+                                required
+                            />
+                            <span className="ml-2">약관 동의</span>
+                        </label>
+                    </div>
+                    <div className="mb-6">
+                        <label className="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                className="form-checkbox"
+                                checked={marketing}
+                                onChange={(e) => setMarketing(e.target.checked)}
+                            />
+                            <span className="ml-2">마케팅 정보 동의 (선택)</span>
+                        </label>
+                    </div>
+                    <button
+                        onClick={handleSubmit}
+                        className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                        다음
+                    </button>
                 </div>
             </div>
         );
