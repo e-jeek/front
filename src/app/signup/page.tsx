@@ -17,6 +17,7 @@ export default function Page() {
     const [emailConfirmed, setEmailConfirmed] = useState(false);
     const [emailChecked, setEmailChecked] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+    const [certiNum, setCertiNum] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [name, setName] = useState('');
@@ -54,7 +55,7 @@ export default function Page() {
         e.preventDefault();
 
         if (!emailConfirmed || !emailChecked || !isValidPassword(password)
-            || password != passwordConfirm || !nicknameConfirmed || !name || !marketing) {
+            || password != passwordConfirm || !nicknameConfirmed || !name || !agreement) {
             alert("다음 단계로 넘어갈 수 없습니다.");
             return;
         }
@@ -158,37 +159,38 @@ export default function Page() {
                     </div>
                     {!isValidEmail(email) && <p className="text-xs mb-0.5 text-red-600">이메일 형식이 아닙니다.</p>}
 
-                    {emailConfirmed &&
+                    {emailSent &&
                         <div className={"relative mb-5"}>
                             <label
-                                htmlFor="username"
+                                htmlFor="certiNum"
                                 className={"absolute left-0 top-1/2 transform -translate-y-1/2 transition-all duration-200 ease-in-out text-sm"}
                             >
                                 인증번호
                             </label>
                             <input
                                 type="text"
-                                id="username"
-                                name="username"
+                                id="certiNum"
+                                name="certiNum"
                                 className="w-full border-b-2 focus:border-black outline-none py-2 pl-20"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={certiNum}
+                                onChange={(e) => setCertiNum(e.target.value)}
                                 required
                             />
-                            { emailSent &&
-                            <span
-                                className={"absolute right-10 mt-3 text-xs"}
-                            >
+
+                            <span className={"absolute right-10 mt-3 text-xs"}>
                                 <Timer />
                             </span>
-                            }
+
                             <button
                                 className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
                                 onClick={() => confirmEmail(email)
                                     .then((d) => {
-                                        setEmailConfirmed(true)
+                                        setEmailChecked(true);
                                     })
-                                    .catch((e) => alert("error"))}
+                                    .catch((e) => {
+                                        alert("error");
+                                        setEmailChecked(true);
+                                    })}
                             >
                                 확인
                             </button>
@@ -274,7 +276,7 @@ export default function Page() {
                                 setNicknameConfirmed(true);
                             }).catch((e) => {
                                 alert("error");
-
+                                setNicknameConfirmed(true);
                             })}
                             className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded "}
 
