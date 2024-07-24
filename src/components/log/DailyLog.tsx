@@ -14,7 +14,7 @@ export default function DailyLog(props: LogProps) {
             <div className="flex flex-col">
                 <div className="text-xl font-semibold mb-2">{props.type}</div>
                 <div className="flex items-center mb-2">
-                    {Array(props.score).fill().map((_, i) => (
+                    {Array(props.score).fill("").map((_, i) => (
                         <div key={i} className="h-4 w-4 bg-red-400 rounded-full mr-1"></div>
                     ))}
                 </div>
