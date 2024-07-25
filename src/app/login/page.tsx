@@ -5,6 +5,7 @@ import google from "../../assets/images/google.svg";
 import naver from "../../assets/images/naver.svg";
 import kakao from "../../assets/images/kakao.svg";
 import {useRouter} from "next/navigation";
+import {signIn} from "next-auth/react";
 
 export default function Page() {
     const router = useRouter();
@@ -116,16 +117,22 @@ export default function Page() {
 
                 <div className="flex justify-around mt-9">
                     <button
-                        className="bg-white w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
+                        className="bg-white w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
+                        onClick={() => signIn("google")}
+                    >
                         <Image src={google} alt="Google" width={30} height={30}/>
                     </button>
                     <button
-                        className="bg-yellow-400 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
-                        <Image src={kakao} alt="Google" width={25} height={25}/>
+                        className="bg-yellow-400 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
+                        onClick={() => signIn("google")}
+                    >
+                        <Image src={kakao} alt="Kakao" width={25} height={25}/>
                     </button>
                     <button
-                        className="bg-green-600 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden">
-                        <Image src={naver} alt="Google" width={25} height={25}/>
+                        className="bg-green-600 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
+                        onClick={() => signIn("naver")}
+                    >
+                        <Image src={naver} alt="Naver" width={25} height={25}/>
                     </button>
                 </div>
             </div>
