@@ -1,11 +1,9 @@
 "use client"
 import React, {forwardRef, useState} from "react";
-import Image from "next/image";
 import {useRouter} from "next/navigation";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import {format} from "date-fns";
-import google from "../../assets/images/google.svg";
 import {confirmEmail, confirmNickname, sendCheckMail, signUp} from "@/api/signUp";
 import Timer from "@/components/Timer";
 
@@ -67,7 +65,24 @@ export default function Page() {
 
     const handleSignUp = () => {
         console.log("handleSignUp");
-        // const res = signUp();
+
+        const member =  {
+            email : email,
+            password: password,
+            name: name,
+            nickname: nickname,
+            birth: format(birth ?? new Date(), "yyyy-MM-dd"),
+            gender: gender,
+            height: Number(height),
+            weight: Number(weight),
+            marketing: marketing,
+            agreement: agreement
+        }
+        console.log(member);
+
+        const res = signUp(member);
+
+        console.log(res);
     }
 
     // 커스텀 입력 컴포넌트
