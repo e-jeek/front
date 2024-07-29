@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {format} from "date-fns";
 import {confirmEmail, confirmNickname, sendCheckMail, signUp} from "@/api/signUp";
 import Timer from "@/components/Timer";
+import Modal from "@/components/Modal";
 
 export default function Page() {
     const router = useRouter();
@@ -30,6 +31,10 @@ export default function Page() {
     const [height, setHeight] = useState("");
     const [weight, setWeight] = useState("");
     const [gender, setGender] = useState("MALE");
+
+    // modal
+    const [isOpen, setIsOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
 
     const isValidEmail = (email: string): boolean => {
         if (!email) {
@@ -101,6 +106,7 @@ export default function Page() {
     if (!performedFirst) {
         return (
             <div className="min-h-screen bg-white flex justify-center items-center">
+                {isOpen && <Modal onClose={() => setIsOpen(false)} message={modalMessage}/>}
                 <div className="min-h-screen w-80 max-w-md bg-white absolute pt-4">
                     <div className="flex items-center mb-6">
                         <button onClick={() => router.back()} className="mr-4">
@@ -148,9 +154,10 @@ export default function Page() {
                             onClick={() => confirmEmail(email)
                                 .then((d) => {setEmailConfirmed(true)})
                                 .catch((e) => {
-                                    alert("error");
-                                    setEmailConfirmed(true);
+                                    setModalMessage("동일한 이메일이 존재합니다");
+                                    setIsOpen(true);
                                 })}
+                            disabled={!isValidEmail(email)}
                         >
                             중복 확인
                         </button>
@@ -174,7 +181,7 @@ export default function Page() {
                     </div>
                     {!isValidEmail(email) && <p className="text-xs mb-0.5 text-red-600">이메일 형식이 아닙니다.</p>}
 
-                    {emailSent &&
+                    {emailSent && !emailChecked &&
                         <div className={"relative mb-5"}>
                             <label
                                 htmlFor="certiNum"
@@ -290,11 +297,10 @@ export default function Page() {
                             onClick={() => confirmNickname(email).then((d) => {
                                 setNicknameConfirmed(true);
                             }).catch((e) => {
-                                alert("error");
-                                setNicknameConfirmed(true);
+                                setModalMessage("동일한 닉네임이 존재합니다.");
+                                setIsOpen(true);
                             })}
                             className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded "}
-
                         >
                             중복 확인
                         </button>
