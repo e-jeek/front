@@ -7,6 +7,7 @@ import {format} from "date-fns";
 import {confirmEmail, confirmNickname, sendCheckMail, signUp} from "@/api/signUp";
 import Timer from "@/components/Timer";
 import Modal from "@/components/Modal";
+import confirmCertiNum from "@/api/signUp/confirmCertiNum";
 
 export default function Page() {
     const router = useRouter();
@@ -94,7 +95,6 @@ export default function Page() {
         </div>
     ));
     CustomInput.displayName = 'CustomInput';
-
 
     if (!performedFirst) {
         return (
@@ -198,7 +198,7 @@ export default function Page() {
 
                             <button
                                 className={"absolute right-0 bg-blue-500 text-white mt-2 text-xs p-1 rounded"}
-                                onClick={() => confirmEmail(email)
+                                onClick={() => confirmCertiNum(email, certiNum)
                                     .then((d) => {
                                         setEmailChecked(true);
                                     })
@@ -250,7 +250,7 @@ export default function Page() {
                             required
                         />
                     </div>
-                    {password && passwordConfirm && password !== passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
+                    {passwordConfirm && password !== passwordConfirm && <p className="text-xs mb-0.5 text-red-600">비밀번호가 일치하지 않습니다.</p>}
 
                     <div className="relative mb-5">
                         <label
@@ -287,7 +287,7 @@ export default function Page() {
                             required
                         />
                         <button
-                            onClick={() => confirmNickname(email).then((d) => {
+                            onClick={() => confirmNickname(nickname).then((d) => {
                                 setNicknameConfirmed(true);
                             }).catch((e) => {
                                 setModalMessage("동일한 닉네임이 존재합니다.");
