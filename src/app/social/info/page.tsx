@@ -24,7 +24,7 @@ export default function Page() {
     const [birth, setBirth] = useState<Date | null>(new Date());
     const [height, setHeight] = useState("");
     const [weight, setWeight] = useState("");
-    const [gender, setGender] = useState("MALE");
+    const [gender, setGender] = useState("MAN");
 
     // modal
     const [isOpen, setIsOpen] = useState(false);
@@ -67,11 +67,11 @@ export default function Page() {
             height: Number(height),
             weight: Number(weight),
             marketing: marketing,
-            agreement: agreement
+            policy: agreement
         }
 
         // api필요
-        signUp(member).then((data) => router.push("/login"));
+        apiInstance.post("api/members/social/info", member).then(() => router.push("/"))
     }
 
     // 커스텀 입력 컴포넌트
@@ -305,14 +305,14 @@ export default function Page() {
                         </div>
                         <div>
                             <button
-                                className={`border-2 rounded w-28 mr-2 ${gender === "MALE" ? "border-blue-400" : "border-gray-300"}`}
-                                onClick={() => setGender("MALE")}
+                                className={`border-2 rounded w-28 mr-2 ${gender === "MAN" ? "border-blue-400" : "border-gray-300"}`}
+                                onClick={() => setGender("MAN")}
                             >
                                 남성
                             </button>
                             <button
-                                className={`border-2 rounded w-28 ${gender === "FEMALE" ? "border-pink-400" : "border-gray-300"}`}
-                                onClick={() => setGender("FEMALE")}
+                                className={`border-2 rounded w-28 ${gender === "WOMAN" ? "border-pink-400" : "border-gray-300"}`}
+                                onClick={() => setGender("WOMAN")}
                             >
                                 여성
                             </button>
