@@ -6,6 +6,7 @@ import naver from "../../assets/images/naver.svg";
 import kakao from "../../assets/images/kakao.svg";
 import {useRouter} from "next/navigation";
 import {signIn} from "next-auth/react";
+import signUpWithSocial from "@/api/signUp/signUpWithSocial";
 
 export default function Page() {
     const router = useRouter();
@@ -91,7 +92,7 @@ export default function Page() {
 
                 <div className="flex justify-between mb-7 pl-5 pr-8">
                     <a href="#" className="text-sm">아이디/비밀번호 찾기</a>
-                    <button onClick={handleSignUpClick} className="text-sm">회원가입</button>
+                    <button onClick={() => handleSignUpPage("email")} className="text-sm">회원가입</button>
                 </div>
 
                 {showSignUp && (
@@ -102,9 +103,28 @@ export default function Page() {
                     `}>
                         <div className="w-80 bg-gray-300 p-4">
                             <h2 className="text-center mb-4">간편 회원가입</h2>
-                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">카카오로 회원가입</button>
-                            <button className="w-full mb-4 p-2 bg-blue-400 rounded">구글로 회원가입</button>
-                            <button className="w-full mb-8 p-2 bg-blue-400 rounded">네이버로 회원가입</button>
+                            <button
+                                className="w-full mb-4 p-2 bg-blue-400 rounded"
+                            >
+                                카카오로 회원가입
+                            </button>
+                            <a
+                                href="http://localhost:8080/oauth2/authorization/naver"
+                                className="block w-full text-center py-2 px-4 mb-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                            >
+                                asdf
+                            </a>
+                            <button
+                                className="w-full mb-4 p-2 bg-blue-400 rounded"
+                            >
+                                구글로 회원가입
+                            </button>
+                            <button
+                                className="w-full mb-8 p-2 bg-blue-400 rounded"
+                                onClick={() => signUpWithSocial("naver")}
+                            >
+                                네이버로 회원가입
+                            </button>
                             <button
                                 className="w-full mb-4 p-2 bg-blue-400 rounded"
                                 onClick={() => handleSignUpPage("email")}
@@ -116,24 +136,24 @@ export default function Page() {
                 )}
 
                 <div className="flex justify-around mt-9">
-                    <button
+                    <a
+                        href="http://localhost:8080/oauth2/authorization/naver"
                         className="bg-white w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
-                        onClick={() => signIn("google")}
                     >
                         <Image src={google} alt="Google" width={30} height={30}/>
-                    </button>
-                    <button
+                    </a>
+                    <a
+                        href="http://localhost:8080/oauth2/authorization/kakao"
                         className="bg-yellow-400 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
-                        onClick={() => signIn("google")}
                     >
                         <Image src={kakao} alt="Kakao" width={25} height={25}/>
-                    </button>
-                    <button
+                    </a>
+                    <a
+                        href="http://localhost:8080/oauth2/authorization/naver"
                         className="bg-green-600 w-12 h-12 flex justify-center items-center rounded-full overflow-hidden"
-                        onClick={() => signIn("naver")}
                     >
                         <Image src={naver} alt="Naver" width={25} height={25}/>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

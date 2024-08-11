@@ -10,7 +10,13 @@ export default function Home() {
   useEffect(() => {
     const accessToken = checkToken()
         .then((data) => {
-          router.push("/login");
+            console.log(data.message);
+            if (!data.message) {
+                router.push("/login");
+            } else {
+                router.push("/log");
+            }
+
         })
         .catch((err) => {
           router.push("/login");

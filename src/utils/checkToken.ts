@@ -1,9 +1,7 @@
 import { getCookie, setCookie } from "cookies-next";
-import { AxiosError } from "axios";
 import { getToken } from "@/api/auth";
 
 export default async function checkToken() {
-    try {
         const accessToken = getCookie("workoutwith_access_token");
         if (!accessToken) {
             const refreshToken = getCookie("workoutwith_refresh_token") as string;
@@ -23,9 +21,4 @@ export default async function checkToken() {
             code: 1,
             message: accessToken
         }
-    } catch (err) {
-        if (err instanceof AxiosError) {
-            return err?.response?.data;
-        }
-    }
 }
