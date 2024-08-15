@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import DailyDietLog from "@/components/log/day/DailyDietLog";
 import getDailyLog from "@/api/log/getDailyLog";
 import DailyWakeUpLog from "@/components/log/day/DailyWakeUpLog";
+import DailyExerciseLog from "@/components/log/day/DailyExerciseLog";
 
 export default function DayContent() {
     const [date, setDate] = useState(new Date());
@@ -67,6 +68,18 @@ export default function DayContent() {
                         imgUrl: "",
                         createdAt: "2024-08-14",
                         updateAt: "2024-08-14"
+                    },
+                    {
+                        actionId: 3,
+                        type: "EXERCISE",
+                        score: 3,
+                        name: "헬스",
+                        duration: 120,
+                        calories: 200,
+                        content: "빡세다..",
+                        imgUrl: "",
+                        createdAt: "2024-08-14",
+                        updateAt: "2024-08-14"
                     }
                 ]);
             });
@@ -81,15 +94,15 @@ export default function DayContent() {
         switch (value.type) {
             case "WAKEUP":
                 return <DailyWakeUpLog value={value} />;
-            case "EXCERCISE":
-                return <DailyDietLog value={value} />;
+            case "EXERCISE":
+                return <DailyExerciseLog value={value} />;
             case "DIET":
                 return <DailyDietLog value={value} />;
         }
     }
 
     return (
-        <div>
+        <div className="pb-20">
             <div className="flex items-center justify-center space-x-4 my-4">
                 <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))} className="text-lg">{'<'}</button>
                 <span className="text-lg">{formatDate(date)}</span>
