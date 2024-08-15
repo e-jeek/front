@@ -1,9 +1,9 @@
 "use client"
 import Footer from "@/components/footer/Footer";
 import {useState} from "react";
-import DayContent from "@/components/log/DayContent";
-import WeekContent from "@/components/log/WeekContent";
-import MonthContent from "@/components/log/MonthConent";
+import DayContent from "@/components/log/day/DayContent";
+import WeekContent from "@/components/log/week/WeekContent";
+import MonthContent from "@/components/log/month/MonthConent";
 
 export default function Page() {
     const [contentType, setContentType] = useState("DAY");
