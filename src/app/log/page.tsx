@@ -4,8 +4,10 @@ import {useState} from "react";
 import DayContent from "@/components/log/day/DayContent";
 import WeekContent from "@/components/log/week/WeekContent";
 import MonthContent from "@/components/log/month/MonthConent";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
+    const router = useRouter();
     const [contentType, setContentType] = useState("DAY");
 
     const getContentBody = () => {
@@ -46,6 +48,12 @@ export default function Page() {
                 { getContentBody() }
             </div>
 
+            <button
+                className="fixed w-16 h-16 bottom-24 right-4 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                onClick={() => router.push("/log/create")}
+            >
+                <span className="text-4xl">+</span>
+            </button>
             <Footer/>
         </div>
     );
