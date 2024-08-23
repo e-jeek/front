@@ -1,5 +1,6 @@
 import example from "../../../assets/images/img.png";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 interface WakeUp {
     actionId: number,
@@ -17,10 +18,14 @@ interface WakeUpLogProps {
 }
 
 export default function DailyWakeUpLog(props: WakeUpLogProps) {
+    const router = useRouter();
     const wakeUp: WakeUp = props.value;
 
     return (
-        <div className="bg-yellow-200 my-4 p-4 rounded-lg items-center">
+        <div
+            className="bg-yellow-200 my-4 p-4 rounded-lg items-center"
+            onClick={() => router.push(`/log/${wakeUp.actionId}`)}
+        >
             <div className="text-xl font-semibold mb-2">기상</div>
             <div className="flex">
                 <Image src={example} alt="example" className="w-24 h-24 rounded-lg mr-4"/>
