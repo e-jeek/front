@@ -1,7 +1,6 @@
 import {useState} from "react";
 
-export default function Rating() {
-    const [rating, setRating] = useState(0);
+export default function Rating({rating, setRating}) {
 
     return (
         <div className="flex space-x-2">

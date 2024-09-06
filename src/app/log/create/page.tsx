@@ -7,12 +7,18 @@ import Rating from "@/components/log/day/Rating";
 import Diet from "@/components/log/create/Diet";
 import Exercise from "@/components/log/create/Exercise";
 import WakeUp from "@/components/log/create/WakeUp";
+import apiInstance from "@/api/instance";
 
 export default function Page() {
     const router = useRouter();
 
     const [date, setDate] = useState(new Date());
     const [category, setCategory] = useState("WAKEUP");
+    const [score, setScore] = useState(0);
+    const [dietTime, setDietTime] = useState("BREAKFAST");
+    const [wakeUpTime, setWakeUpTime] = useState("");
+    const [type, setType] = useState("");
+    const [content, setContent] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
@@ -26,17 +32,62 @@ export default function Page() {
 
     const handleSubmit = () => {
         // Logic to handle form submission
-        console.log('Form submitted');
+        let data;
+        if (category === "WAKEUP") {
+            data = {
+                date: date,
+                category: category,
+                score: score,
+                time: wakeUpTime,
+                image: image,
+                content: content
+            };
+
+        } else if (category === "DIET") {
+            data = {
+                date: date,
+                category: category,
+                score: score,
+                time: dietTime,
+                image: image,
+                type: "type",
+                content: content
+            };
+
+        } else if (category === "EXERCISE") {
+            data = {
+                date: date,
+                category: category,
+                score: score,
+                type: "type",
+                image: image,
+                content: content
+            };
+
+        } else {
+            alert("ERROR");
+            return;
+        }
+
+        apiInstance.post("url", data)
+        .then((res) => {
+            console.log(res.data);
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+
     };
 
-    function getInputByCategory() {
+
+    function getInputByCategory(category) {
         switch (category) {
             case "DIET":
-                return <Diet />
+                return <Diet time={dietTime} setTime={setDietTime} type={type} setType={setType} />
             case "EXERCISE":
-                return <Exercise />
+                return <Exercise type={type} setType={setType} />
             case "WAKEUP":
-                return <WakeUp />
+                return <WakeUp time={wakeUpTime} setTime={setWakeUpTime} />
         }
     }
 
@@ -57,7 +108,7 @@ export default function Page() {
         <div className="min-h-screen bg-white flex justify-center items-center">
             <div className="min-h-screen w-80 max-w-md bg-white absolute pt-4">
                 <div className="flex items-center mb-6">
-                    <button className="mr-4">
+                    <button className="mr-4" onClick={() => router.back()}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -133,10 +184,10 @@ export default function Page() {
                     <div className="left-0 text-sm w-16">
                         점수
                     </div>
-                    <Rating/>
+                    <Rating rating={score} setRating={setScore}/>
                 </div>
 
-                {getInputByCategory()}
+                {getInputByCategory(category)}
 
                 <div className="mb-4">
 
@@ -158,6 +209,7 @@ export default function Page() {
                 <textarea
                     className="w-full p-2 mb-4 text-sm text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="내용을 입력해주세요."
+                    onChange={(event) => setContent(event.target.value)}
                 ></textarea>
 
                 <button

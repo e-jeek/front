@@ -1,5 +1,6 @@
 import example from "../../../assets/images/img.png";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 interface Diet {
     actionId: number,
@@ -20,6 +21,7 @@ interface DietLogProps {
 
 export default function DailyDietLog(props: DietLogProps) {
     const diet: Diet = props.value;
+    const router = useRouter();
 
     function getMealType(value: string) {
         switch (value) {
@@ -33,7 +35,10 @@ export default function DailyDietLog(props: DietLogProps) {
     }
 
     return (
-        <div className="bg-pink-100 my-4 p-4 rounded-lg items-center">
+        <div
+            className="bg-pink-100 my-4 p-4 rounded-lg items-center"
+            onClick={() => router.push(`/log/${diet.actionId}`)}
+        >
             <div className="text-xl font-semibold mb-2">식사 - {getMealType(diet.dietType)}</div>
             <div className="flex">
                 <Image src={example} alt="example" className="w-24 h-24 rounded-lg mr-4"/>

@@ -1,8 +1,7 @@
 "use client"
 import React, {useState} from "react";
 
-export default function Exercise() {
-    const [type, setType] = useState("");
+export default function Exercise({type, setType}) {
     
     return (
         <div>

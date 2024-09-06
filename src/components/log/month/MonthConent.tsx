@@ -1,10 +1,61 @@
 "use client"
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, format, addMonths, subMonths } from 'date-fns';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function MonthContent() {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState(new Date());
+    const [dataMap, setDataMap] = useState(new Map());
+
+    useEffect(() => {
+            const data = [
+                "2024-09-01": {
+                    "WAKEUP": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    },
+                    "DIET": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    },
+                    "EXERCISE": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    }
+                },
+
+                "2024-09-02": {
+                    "WAKEUP": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    },
+                    "DIET": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    },
+                    "EXERCISE": {
+                        "average": 4,
+                        "data": [
+                            // 데이터 List
+                        ]
+                    }
+                }
+            ];
+
+            setDataMap(new Map(Object.entries(data)));
+
+        }, [currentMonth]);
+
 
     const renderHeader = () => {
         return (
@@ -68,6 +119,8 @@ export default function MonthContent() {
                 <div className="text-center font-bold">토</div>
             </div>
             {renderCells()}
+
+            {dataMap}
         </div>
     );
 }

@@ -1,9 +1,7 @@
 "use client"
 import React, {useState} from "react";
 
-export default function WakeUp() {
-    const [time, setTime] = useState("");
-
+export default function WakeUp({time, setTime}) {
     return (
         <div>
             <div className="relative mb-5">

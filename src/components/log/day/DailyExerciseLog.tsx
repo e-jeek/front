@@ -1,5 +1,6 @@
 import example from "../../../assets/images/img.png";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 interface Exercise {
     actionId: number,
@@ -21,8 +22,13 @@ interface ExerciseLogProps {
 export default function DailyExerciseLog(props: ExerciseLogProps) {
     const exercise: Exercise = props.value;
 
+    const router = useRouter();
+
     return (
-        <div className="bg-blue-200 my-4 p-4 rounded-lg items-center">
+        <div
+            className="bg-blue-200 my-4 p-4 rounded-lg items-center"
+            onClick={() => router.push(`/log/${exercise.actionId}`)}
+        >
             <div className="text-xl font-semibold mb-2">운동</div>
             <div className="flex">
                 <Image src={example} alt="example" className="w-24 h-24 rounded-lg mr-4"/>

@@ -1,9 +1,7 @@
 "use client"
 import React, {useState} from "react";
 
-export default function Diet() {
-    const [time, setTime] =  useState("BREAKFAST");
-    const [type, setType] = useState("");
+export default function Diet({time, setTime, type, setType}) {
 
     return (
         <div>
