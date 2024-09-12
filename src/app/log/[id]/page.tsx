@@ -2,9 +2,12 @@
 import React, {useEffect, useState} from "react";
 import example from "@/assets/images/img.png";
 import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 export default function Page({params}) {
     const id = params.id;
+    const router = useRouter();
+
     const [category, setCategory] = useState("WAKEUP");
 
     const [action, setAction] = useState({
@@ -17,7 +20,9 @@ export default function Page({params}) {
         createdAt: "",
         updateAt: ""
     });
+
     useEffect(() => {
+        // id 값을 가지고 action을 조회하여 처리해준다.
         setAction({
             actionId: 4,
             type: "WAKEUP",
@@ -38,7 +43,7 @@ export default function Page({params}) {
         <div className="min-h-screen bg-white flex justify-center items-center">
             <div className="min-h-screen w-80 max-w-md bg-white absolute pt-4">
                 <div className="flex items-center mb-6">
-                    <button className="mr-4">
+                    <button className="mr-4" onClick={() => router.back()}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
