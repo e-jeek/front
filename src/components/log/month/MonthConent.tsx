@@ -8,53 +8,26 @@ export default function MonthContent() {
     const [dataMap, setDataMap] = useState(new Map());
 
     useEffect(() => {
-            const data = [
-                "2024-09-01": {
-                    "WAKEUP": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
-                    },
-                    "DIET": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
-                    },
-                    "EXERCISE": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
+        const map = new Map();
+
+        map.set("2024-09-01", {
+            WAKEUP : {
+                average : 4.0,
+                data : [
+                    {
+                        category : "WAKEUP",
+                        score: 4,
+                        time: "09:00",
+                        image: "image",
+                        content: "content"
                     }
-                },
+                ]
+            }
+        });
 
-                "2024-09-02": {
-                    "WAKEUP": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
-                    },
-                    "DIET": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
-                    },
-                    "EXERCISE": {
-                        "average": 4,
-                        "data": [
-                            // 데이터 List
-                        ]
-                    }
-                }
-            ];
-
-            setDataMap(new Map(Object.entries(data)));
-
-        }, [currentMonth]);
+        setDataMap(map);
+        console.log(dataMap.keys());
+    }, [currentMonth]);
 
 
     const renderHeader = () => {
@@ -85,10 +58,13 @@ export default function MonthContent() {
         }
 
         return days.map((day, index) => (
-            <div key={index} className={`w-1/7 h-14 flex justify-center ${isSameDate(day, selectedDay) ? "border-2 border-red-600" : ""}`} onClick={() => setSelectedDay(day)}>
-                <span className={`${day.getMonth() !== currentMonth.getMonth() ? 'text-gray-400' : ''}`}>
+            <div key={index} className={`w-1/7 h-14 ${isSameDate(day, selectedDay) ? "border-2 border-red-600" : ""}`} onClick={() => setSelectedDay(day)}>
+                <div className={`text-center ${day.getMonth() !== currentMonth.getMonth() ? 'text-gray-400' : ''}`}>
                     {format(day, 'd')}
-                </span>
+                </div>
+                <div className="text-center">
+                    {dataMap.get(format(day, "yyyy-MM-dd")) ? "o" : ""}
+                </div>
             </div>
         ));
     };
@@ -107,20 +83,23 @@ export default function MonthContent() {
     };
 
     return (
-        <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-            {renderHeader()}
-            <div className="grid grid-cols-7 gap-1 border-b-2 mb-2 pb-1">
-                <div className="text-center font-bold">일</div>
-                <div className="text-center font-bold">월</div>
-                <div className="text-center font-bold">화</div>
-                <div className="text-center font-bold">수</div>
-                <div className="text-center font-bold">목</div>
-                <div className="text-center font-bold">금</div>
-                <div className="text-center font-bold">토</div>
+        <div>
+            <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-md">
+                {renderHeader()}
+                <div className="grid grid-cols-7 gap-1 border-b-2 mb-2 pb-1">
+                    <div className="text-center font-bold">일</div>
+                    <div className="text-center font-bold">월</div>
+                    <div className="text-center font-bold">화</div>
+                    <div className="text-center font-bold">수</div>
+                    <div className="text-center font-bold">목</div>
+                    <div className="text-center font-bold">금</div>
+                    <div className="text-center font-bold">토</div>
+                </div>
+                {renderCells()}
             </div>
-            {renderCells()}
-
-            {dataMap}
+            <div>
+                {dataMap.has("2024-09-01") ? dataMap.get("2024-09-01")["WAKEUP"]["average"] : ""}
+            </div>
         </div>
     );
 }
