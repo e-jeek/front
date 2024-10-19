@@ -47,7 +47,7 @@ export default function MonthContent() {
     };
 
     const renderDays = () => {
-        const days = [];
+        const days: Date[] = [];
         const startDate = startOfWeek(startOfMonth(currentMonth));
         const endDate = endOfWeek(endOfMonth(currentMonth));
 

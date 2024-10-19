@@ -3,8 +3,9 @@ import React, {useEffect, useState} from "react";
 import example from "@/assets/images/img.png";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import {Params} from "next/dist/shared/lib/router/utils/route-matcher";
 
-export default function Page({params}) {
+export default function Page({params} : {params : Params}) {
     const id = params.id;
     const router = useRouter();
 

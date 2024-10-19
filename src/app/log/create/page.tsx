@@ -22,7 +22,7 @@ export default function Page() {
     const [image, setImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
             setImage(file);
@@ -80,7 +80,7 @@ export default function Page() {
     };
 
 
-    function getInputByCategory(category) {
+    function getInputByCategory(category: any) {
         switch (category) {
             case "DIET":
                 return <Diet time={dietTime} setTime={setDietTime} type={type} setType={setType} />
@@ -145,7 +145,7 @@ export default function Page() {
                     <div className="absolute right-0 top-0 h-full flex items-center">
                         <DatePicker
                             selected={date}
-                            onChange={(date) => setDate(date)}
+                            onChange={(date: any) => setDate(date)}
                             dateFormat="yyyy-MM-dd"
                             customInput={<CustomInput onClick={() => {
                             }}/>}
