@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Metadata } from "next";
-
+//TODO: 날짜검증에 문제가 있음. 모집일만 선택하면 등록이 활성화 됨.
 export default function CreateChallenge() {
   const [name, setName] = useState("");
   const [type, setType] = useState("기상");
@@ -144,11 +144,15 @@ export default function CreateChallenge() {
 
     try {
       // 서버로 요청 보내기
-      const response = await axios.post("/api/challenges", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/challenges`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log("Response:", response.data);
       // 요청 성공 시 받은 주소로 이동
       if (response.status === 201 && response.data) {
@@ -162,7 +166,7 @@ export default function CreateChallenge() {
   };
 
   return (
-    <div className="max-w-md mx-auto h-screen overflow-auto bg-white">
+    <div className="max-w-md mx-auto h-screen overflow-auto bg-white text-black">
       {/* Header with Image */}
       <header className="relative h-48">
         <Image
@@ -213,7 +217,7 @@ export default function CreateChallenge() {
             value={name}
             onChange={handleNameChange}
             placeholder="챌린지 이름"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-2xl text-black"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-2xl "
           />
         </div>
 
@@ -369,17 +373,24 @@ export default function CreateChallenge() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
-
-        {/* Submit Button */}
         <div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 disabled:bg-gray-500"
-            disabled={isSubmitDisabled}
-          >
-            저장
-          </button>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
+          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
         </div>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 disabled:bg-gray-500 sticky bottom-0"
+          disabled={isSubmitDisabled}
+        >
+          등록
+        </button>
       </form>
     </div>
   );
