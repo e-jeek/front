@@ -4,19 +4,18 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Metadata } from "next";
 //TODO: 날짜검증에 문제가 있음. 모집일만 선택하면 등록이 활성화 됨.
 export default function CreateChallenge() {
   const [name, setName] = useState("");
-  const [type, setType] = useState("기상");
+  const [type, setType] = useState("wakeup");
   const [capacity, setCapacity] = useState(10);
   const [dueDate, setDueDate] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [rule, setRule] = useState("주 1회");
+  const [rule, setRule] = useState("1");
   const [hidden, setHidden] = useState(false); // 기본값 false
-  const [secretKey, setSecretKey] = useState(""); // 필요 여부 불명
-  const [status, setStatus] = useState(""); // 필요 여부 불명
+  const [secretKey, setSecretKey] = useState(""); // 용도 모룸 물어봐야함
+  const [status, setStatus] = useState(""); // 용도 모룸 물어봐야함
   const [content, setContent] = useState("");
   const [hashtags, setHashtags] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,7 +25,6 @@ export default function CreateChallenge() {
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [hashtag, setHashtag] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [hasDueDateInteracted, setHasDueDateInteracted] = useState(false); // 마감일 상호작용 체크
   const router = useRouter();
@@ -37,41 +35,62 @@ export default function CreateChallenge() {
       const file = event.target.files[0];
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
+      setSelectedFile(file); // 파일을 selectedFile 상태로 저장
     }
   };
-  // 서밋 검증 관련
   const validateDates = (due: string, start: string, end: string) => {
-    if (!due || !start || !end) return true; // 초기에는 true로 설정해서 에러 메시지가 나타나지 않도록 함
-    if (new Date(start) <= new Date(due)) return false;
-    if (new Date(end) <= new Date(start)) return false;
+    // 모든 날짜가 입력되지 않았으면 false 반환 (버튼 비활성화)
+    if (!due || !start || !end) return false;
+
+    // 시작일이 마감일과 같거나 이후여야 함
+    if (new Date(start) < new Date(due)) {
+      setErrorMessage("시작일은 마감일 이후여야 합니다.");
+      return false;
+    }
+
+    // 종료일이 시작일 이후여야 하고, 종료일이 마감일 이후여야 함
+    if (new Date(end) <= new Date(start)) {
+      setErrorMessage("종료일은 시작일 이후여야 합니다.");
+      return false;
+    }
+
+    if (new Date(end) <= new Date(due)) {
+      setErrorMessage("종료일은 마감일 이후여야 합니다.");
+      return false;
+    }
+
+    // 모든 조건을 만족하면 true 반환
     return true;
   };
 
+  const validateAndToggleSubmit = (due: string, start: string, end: string) => {
+    // 모든 날짜가 입력되지 않았을 때 에러 메시지를 표시하지 않고 등록 버튼만 비활성화
+    if (!due || !start || !end) {
+      setErrorMessage(null);
+      setIsSubmitDisabled(true);
+      return;
+    }
+
+    // 날짜 검증 통과 여부에 따라 버튼 활성화 및 에러 메시지 설정
+    if (!validateDates(due, start, end)) {
+      setIsSubmitDisabled(true);
+    } else {
+      setErrorMessage(null);
+      setIsSubmitDisabled(false);
+    }
+  };
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDueDate = e.target.value;
     setDueDate(newDueDate);
-    setHasDueDateInteracted(true); // 마감일이 선택된 후 상호작용으로 간주
+    setHasDueDateInteracted(true);
 
-    if (startDate && new Date(newDueDate) >= new Date(startDate)) {
-      setErrorMessage("마감일은 시작일 이전이어야 합니다."); // 에러 메시지만 표시
-    } else {
-      setErrorMessage(null);
-    }
-
+    // 에러 메시지를 설정하지 않고 검증 함수만 호출
     validateAndToggleSubmit(newDueDate, startDate, endDate);
   };
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newStartDate = e.target.value;
     setStartDate(newStartDate);
-
-    if (dueDate && new Date(newStartDate) <= new Date(dueDate)) {
-      setErrorMessage("시작일은 마감일 이후여야 합니다."); // 에러 메시지만 표시
-    } else if (endDate && new Date(newStartDate) >= new Date(endDate)) {
-      setErrorMessage("종료일은 시작일 이후여야 합니다."); // 에러 메시지만 표시
-    } else {
-      setErrorMessage(null);
-    }
 
     validateAndToggleSubmit(dueDate, newStartDate, endDate);
   };
@@ -80,23 +99,7 @@ export default function CreateChallenge() {
     const newEndDate = e.target.value;
     setEndDate(newEndDate);
 
-    if (startDate && new Date(newEndDate) <= new Date(startDate)) {
-      setErrorMessage("종료일은 시작일 이후여야 합니다."); // 에러 메시지만 표시
-    } else {
-      setErrorMessage(null);
-    }
-
     validateAndToggleSubmit(dueDate, startDate, newEndDate);
-  };
-
-  const validateAndToggleSubmit = (due: string, start: string, end: string) => {
-    if (hasDueDateInteracted && !validateDates(due, start, end)) {
-      setErrorMessage("날짜 설정이 올바르지 않습니다.");
-      setIsSubmitDisabled(true);
-    } else {
-      setErrorMessage(null);
-      setIsSubmitDisabled(false);
-    }
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,27 +232,27 @@ export default function CreateChallenge() {
           <div className="flex space-x-2 mt-1">
             <button
               type="button"
-              onClick={() => setType("기상")}
+              onClick={() => setType("wakeup")}
               className={`px-4 py-2 rounded-md ${
-                type === "기상" ? "bg-blue-500 text-white" : "bg-gray-200"
+                type === "wakeup" ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
               기상
             </button>
             <button
               type="button"
-              onClick={() => setType("식단")}
+              onClick={() => setType("diet")}
               className={`px-4 py-2 rounded-md ${
-                type === "식단" ? "bg-blue-500 text-white" : "bg-gray-200"
+                type === "diet" ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
               식단
             </button>
             <button
               type="button"
-              onClick={() => setType("운동")}
+              onClick={() => setType("exercise")}
               className={`px-4 py-2 rounded-md ${
-                type === "운동" ? "bg-blue-500 text-white" : "bg-gray-200"
+                type === "exercise" ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
               운동
@@ -317,6 +320,7 @@ export default function CreateChallenge() {
               onChange={handleStartDateChange}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
+            ~
             <input
               type="date"
               value={endDate}
@@ -373,16 +377,7 @@ export default function CreateChallenge() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
         </div>
-        <div>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-          <p>인증 예시 방법 추가 버튼이 생길 예정</p>
-        </div>
+        <div></div>
         {/* Submit Button */}
         <button
           type="submit"
